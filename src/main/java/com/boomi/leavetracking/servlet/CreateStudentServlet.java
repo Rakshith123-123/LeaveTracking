@@ -1,6 +1,11 @@
 package com.boomi.leavetracking.servlet;
 
+import com.boomi.leavetracking.dao.StudentDao;
+import com.boomi.leavetracking.models.Student;
+
 import java.io.IOException;
+import java.util.List;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,21 +21,20 @@ public class CreateStudentServlet extends HttpServlet {
         String rollNo = request.getParameter("rollNo");
         String department = request.getParameter("department");
         // create a new student record in the database
-        boolean success = createStudent(name, rollNo, department);
+        StudentDao studentDao = new StudentDao();
+        boolean success = studentDao.createStudent(name, rollNo, department);
         if (success) {
+            List<Student> allStudents = studentDao.getAllStudents();
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("studentRecords.jsp");
+            request.setAttribute("allStudents",allStudents);
+            requestDispatcher.forward(request,response);
             // redirect to student records page
-            response.sendRedirect(request.getContextPath() + "/studentRecords.jsp");
+            // response.sendRedirect(request.getContextPath() + "/studentRecords.jsp");
         } else {
             // show error message and redirect back to create student form
             request.setAttribute("error", "Failed to create student record");
-            request.getRequestDispatcher("/createStudent.jsp").forward(request, response);
+            request.getRequestDispatcher("/addStudentForm.jsp").forward(request, response);
         }
-    }
-
-    private boolean createStudent(String name, String rollNo, String department) {
-        // create a new student record in the database using Hibernate or other ORM framework
-        // return true if the student record is created successfully, else false
-        return false;
     }
 }
 

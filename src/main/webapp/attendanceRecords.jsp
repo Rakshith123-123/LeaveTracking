@@ -12,19 +12,24 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Student Records</title>
+  <title>Attendance Records</title>
 </head>
 <body>
 <%
+  if(session.getAttribute("username") == null){
+    response.sendRedirect(request.getContextPath() + "/login.jsp");
+  }
+%>
+<%
   List<Attendance> attendanceList = (List<Attendance>) request.getAttribute("attendanceList");
 %>
-<h1>Student Records</h1>
+<h1>Attendance Records</h1>
 <table>
   <tr>
     <th>ID</th>
-    <th>Name</th>
+    <th>Date</th>
     <th>Roll No</th>
-    <th>Department</th>
+    <th>Present/Absent</th>
   </tr>
   <%
     for (Attendance attendance : attendanceList) {
@@ -34,16 +39,18 @@
     <td><%=attendance.getDate()%></td>
     <td><%=attendance.getStudent()%></td>
     <td><%=attendance.getAttendance()%></td>
-<%--    <td>--%>
-<%--    <a href="updateAttendanceForm?rollNo=${record.rollNo}&amp;date=${record.date}">Update</a>--%>
-<%--    <a href="deleteAttendance?rollNo=${record.rollNo}&amp;date=${record.date}">Delete</a>--%>
-<%--    <td>--%>
+    <td>
+    <a href="addUpdateAttendanceForm.jsp">Update</a>
+    <a href="deleteAttendanceForm.jsp">Delete</a>
+    <td>
   </tr>
   <%
     }
   %>>
 </table>
 <br>
-<a href="addAttendanceForm.jsp">Add Student</a>
+<a href="addAttendanceForm.jsp">Add Attendance</a>
+<br>
+<a href="home.jsp">Home</a>
 </body>
 </html>

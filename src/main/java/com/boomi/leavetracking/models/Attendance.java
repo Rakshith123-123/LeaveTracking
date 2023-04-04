@@ -12,7 +12,7 @@ public class Attendance {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "roll_no", referencedColumnName = "roll_no")
+    @JoinColumn(name = "rollNo", referencedColumnName = "rollNo")
     private Student student;
 
     @Column(name = "date")
@@ -20,6 +20,15 @@ public class Attendance {
 
     @Column(name = "attendance")
     private String attendance;
+
+    public Attendance() {
+    }
+
+    public Attendance(Student student, LocalDate date, String attendance) {
+        this.student = student;
+        this.date = date;
+        this.attendance = attendance;
+    }
 
     public Long getId() {
         return id;
@@ -29,8 +38,8 @@ public class Attendance {
         this.id = id;
     }
 
-    public Student getStudent() {
-        return student;
+    public String getStudent() {
+        return student.getRollNo();
     }
 
     public void setStudent(Student student) {

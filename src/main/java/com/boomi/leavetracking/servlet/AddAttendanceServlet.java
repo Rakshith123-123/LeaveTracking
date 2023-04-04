@@ -6,12 +6,9 @@ import com.boomi.leavetracking.models.Attendance;
 import com.boomi.leavetracking.models.Student;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -38,11 +35,13 @@ public class AddAttendanceServlet extends HttpServlet {
         // add the attendance record to the database
         boolean success = attendanceDao.createAttendence(rollNo,dateStr,attendance);
         if (success) {
-            // redirect the user to the attendance.jsp page
-            response.sendRedirect("attendance.jsp");
+            List<Attendance> attendanceList = attendanceDao.getAllAttendance();
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("attendanceRecords.jsp");
+            request.setAttribute("attendanceList",attendanceList);
+            requestDispatcher.forward(request,response);
         } else {
-            // handle the error appropriately
-            // ...
+            request.setAttribute("error", "Failed to create student record");
+            request.getRequestDispatcher("/addAttendanceForm.jsp").forward(request, response);
         }
     }
 }
